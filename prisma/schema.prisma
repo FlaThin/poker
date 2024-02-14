@@ -11,5 +11,30 @@ model Poker {
   id        String   @id @default(uuid())
   title     String
   createdAt DateTime @default(now())
-  updateAt  DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  options PokerOption[]
+  votes   Vote[]
+}
+
+model PokerOption {
+  id      String @id @default(uuid())
+  title   String
+  pokerId String
+
+  poker Poker  @relation(fields: [pokerId], references: [id])
+  votes Vote[]
+}
+
+model Vote {
+  id            Int      @id @default(autoincrement())
+  sessionId     String
+  pokerId       String
+  pokerOptionId String
+  createdAt     DateTime @default(now())
+
+  pokerOption PokerOption @relation(fields: [pokerOptionId], references: [id])
+  poker       Poker       @relation(fields: [pokerId], references: [id])
+
+  @@unique([sessionId, pokerId])
 }
